@@ -22,8 +22,7 @@
 //
 //-----------------------------------------------------------------------------
 
-static const char
-rcsid[] = "$Id: p_pspr.c,v 1.5 1997/02/03 22:45:12 b1 Exp $";
+//static const char rcsid[] = "$Id: p_pspr.c,v 1.5 1997/02/03 22:45:12 b1 Exp $";
 
 #include "doomdef.h"
 #include "d_event.h"
@@ -527,7 +526,7 @@ A_Saw
 			     linetarget->x, linetarget->y);
     if (angle - player->mo->angle > ANG180)
     {
-	if (angle - player->mo->angle < -ANG90/20)
+	if ((int)angle - (int)player->mo->angle < -ANG90/20)
 	    player->mo->angle = angle + ANG90/21;
 	else
 	    player->mo->angle -= ANG90/20;

@@ -22,8 +22,7 @@
 //-----------------------------------------------------------------------------
 
 
-static const char
-rcsid[] = "$Id: r_things.c,v 1.5 1997/02/03 16:47:56 b1 Exp $";
+//static const char rcsid[] = "$Id: r_things.c,v 1.5 1997/02/03 16:47:56 b1 Exp $";
 
 
 #include <stdio.h>
@@ -504,7 +503,7 @@ void R_ProjectSprite (mobj_t* thing)
     
     // decide which patch to use for sprite relative to player
 #ifdef RANGECHECK
-    if ((unsigned)thing->sprite >= numsprites)
+    if ((int)thing->sprite >= numsprites)
 	I_Error ("R_ProjectSprite: invalid sprite number %i ",
 		 thing->sprite);
 #endif
@@ -657,7 +656,7 @@ void R_DrawPSprite (pspdef_t* psp)
     
     // decide which patch to use
 #ifdef RANGECHECK
-    if ( (unsigned)psp->state->sprite >= numsprites)
+    if ( (int)psp->state->sprite >= numsprites)
 	I_Error ("R_ProjectSprite: invalid sprite number %i ",
 		 psp->state->sprite);
 #endif
@@ -790,7 +789,7 @@ void R_SortVisSprites (void)
     int			count;
     vissprite_t*	ds;
     vissprite_t*	best;
-    vissprite_t		unsorted;
+    static vissprite_t		unsorted;
     fixed_t		bestscale;
 
     count = vissprite_p - vissprites;

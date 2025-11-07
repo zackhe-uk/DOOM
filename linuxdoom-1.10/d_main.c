@@ -25,7 +25,7 @@
 //-----------------------------------------------------------------------------
 
 
-static const char rcsid[] = "$Id: d_main.c,v 1.8 1997/02/03 22:45:09 b1 Exp $";
+//static const char rcsid[] = "$Id: d_main.c,v 1.8 1997/02/03 22:45:09 b1 Exp $";
 
 #define	BGCOLOR		7
 #define	FGCOLOR		8
@@ -150,7 +150,7 @@ int 		eventtail;
 void D_PostEvent (event_t* ev)
 {
     events[eventhead] = *ev;
-    eventhead = (++eventhead)&(MAXEVENTS-1);
+    eventhead = (eventhead + 1) & (MAXEVENTS - 1);
 }
 
 
@@ -164,15 +164,16 @@ void D_ProcessEvents (void)
 	
     // IF STORE DEMO, DO NOT ACCEPT INPUT
     if ( ( gamemode == commercial )
-	 && (W_CheckNumForName("map01")<0) )
+	 && (W_CheckNumForName("map01") < 0) )
       return;
 	
-    for ( ; eventtail != eventhead ; eventtail = (++eventtail)&(MAXEVENTS-1) )
+    for ( ; eventtail != eventhead
+		  ; eventtail = (eventtail + 1) & (MAXEVENTS - 1) )
     {
-	ev = &events[eventtail];
-	if (M_Responder (ev))
-	    continue;               // menu ate the event
-	G_Responder (ev);
+		ev = &events[eventtail];
+		if (M_Responder (ev))
+			continue;               // menu ate the event
+		G_Responder (ev);
     }
 }
 
@@ -1024,26 +1025,26 @@ void D_DoomMain (void)
     // Check for -file in shareware
     if (modifiedgame)
     {
-	// These are the lumps that will be checked in IWAD,
-	// if any one is not present, execution will be aborted.
-	char name[23][8]=
-	{
-	    "e2m1","e2m2","e2m3","e2m4","e2m5","e2m6","e2m7","e2m8","e2m9",
-	    "e3m1","e3m3","e3m3","e3m4","e3m5","e3m6","e3m7","e3m8","e3m9",
-	    "dphoof","bfgga0","heada1","cybra1","spida1d1"
-	};
-	int i;
-	
-	if ( gamemode == shareware)
-	    I_Error("\nYou cannot -file with the shareware "
-		    "version. Register!");
+		// These are the lumps that will be checked in IWAD,
+		// if any one is not present, execution will be aborted.
+		char name[23][8]=
+		{
+			"e2m1","e2m2","e2m3","e2m4","e2m5","e2m6","e2m7","e2m8","e2m9",
+			"e3m1","e3m3","e3m3","e3m4","e3m5","e3m6","e3m7","e3m8","e3m9",
+			"dphoof","bfgga0","heada1","cybra1","spida1d1"
+		};
+		int i;
+		
+		if (gamemode == shareware)
+			I_Error("\nYou cannot -file with the shareware "
+				"version. Register!");
 
-	// Check for fake IWAD with right name,
-	// but w/o all the lumps of the registered version. 
-	if (gamemode == registered)
-	    for (i = 0;i < 23; i++)
-		if (W_CheckNumForName(name[i])<0)
-		    I_Error("\nThis is not the registered version.");
+		// Check for fake IWAD with right name,
+		// but w/o all the lumps of the registered version. 
+		if (gamemode == registered)
+			for (i = 0; i < 23; i++)
+				if (W_CheckNumForName(name[i]) < 0)
+					I_Error("\nThis is not the registered version.");
     }
     
     // Iff additonal PWAD files are used, print modified banner

@@ -22,8 +22,7 @@
 //
 //-----------------------------------------------------------------------------
 
-static const char
-rcsid[] = "$Id: m_menu.c,v 1.7 1997/02/03 22:45:10 b1 Exp $";
+//static const char rcsid[] = "$Id: m_menu.c,v 1.7 1997/02/03 22:45:10 b1 Exp $";
 
 #include <unistd.h>
 #include <sys/types.h>
@@ -226,7 +225,7 @@ void M_WriteText(int x, int y, char *string);
 int  M_StringWidth(char *string);
 int  M_StringHeight(char *string);
 void M_StartControlPanel(void);
-void M_StartMessage(char *string,void *routine,boolean input);
+void M_StartMessage(char *string, void (*routine)(int), boolean input);
 void M_StopMessage(void);
 void M_ClearMenus (void);
 
@@ -355,9 +354,9 @@ menuitem_t OptionsMenu[]=
     {1,"M_MESSG",	M_ChangeMessages,'m'},
     {1,"M_DETAIL",	M_ChangeDetail,'g'},
     {2,"M_SCRNSZ",	M_SizeDisplay,'s'},
-    {-1,"",0},
+    {-1,"",0,0},
     {2,"M_MSENS",	M_ChangeSensitivity,'m'},
-    {-1,"",0},
+    {-1,"",0,0},
     {1,"M_SVOL",	M_Sound,'s'}
 };
 
@@ -431,9 +430,9 @@ enum
 menuitem_t SoundMenu[]=
 {
     {2,"M_SFXVOL",M_SfxVol,'s'},
-    {-1,"",0},
+    {-1,"",0,0},
     {2,"M_MUSVOL",M_MusicVol,'m'},
-    {-1,"",0}
+    {-1,"",0,0}
 };
 
 menu_t  SoundDef =
@@ -738,7 +737,7 @@ void M_QuickLoad(void)
 	M_StartMessage(QSAVESPOT,NULL,false);
 	return;
     }
-    sprintf(tempstring,QLPROMPT,savegamestrings[quickSaveSlot]);
+    snprintf(tempstring, sizeof(tempstring), savegamestrings[quickSaveSlot]);
     M_StartMessage(tempstring,M_QuickLoadResponse,true);
 }
 
@@ -900,7 +899,7 @@ void M_VerifyNightmare(int ch)
     if (ch != 'y')
 	return;
 		
-    G_DeferedInitNew(nightmare,epi+1,1);
+    G_DeferedInitNew(sk_nightmare,epi+1,1);
     M_ClearMenus ();
 }
 
@@ -1226,9 +1225,9 @@ M_DrawSelCell
 
 void
 M_StartMessage
-( char*		string,
-  void*		routine,
-  boolean	input )
+( char*	    	string,
+  void (*routine)(int),
+  boolean	    input )
 {
     messageLastMenuActive = menuactive;
     messageToPrint = 1;
@@ -1258,13 +1257,13 @@ int M_StringWidth(char* string)
     int             w = 0;
     int             c;
 	
-    for (i = 0;i < strlen(string);i++)
+    for (i = 0; (unsigned)i < strlen(string); i++)
     {
-	c = toupper(string[i]) - HU_FONTSTART;
-	if (c < 0 || c >= HU_FONTSIZE)
-	    w += 4;
-	else
-	    w += SHORT (hu_font[c]->width);
+        c = toupper(string[i]) - HU_FONTSTART;
+        if (c < 0 || c >= HU_FONTSIZE)
+            w += 4;
+        else
+            w += SHORT (hu_font[c]->width);
     }
 		
     return w;
@@ -1282,9 +1281,9 @@ int M_StringHeight(char* string)
     int             height = SHORT(hu_font[0]->height);
 	
     h = height;
-    for (i = 0;i < strlen(string);i++)
-	if (string[i] == '\n')
-	    h += height;
+    for (i = 0; (unsigned)i < strlen(string); i++)
+        if (string[i] == '\n')
+            h += height;
 		
     return h;
 }
@@ -1756,19 +1755,19 @@ void M_Drawer (void)
 	y = 100 - M_StringHeight(messageString)/2;
 	while(*(messageString+start))
 	{
-	    for (i = 0;i < strlen(messageString+start);i++)
+	    for (i = 0; (unsigned) i < strlen(messageString + start); i++)
 		if (*(messageString+start+i) == '\n')
 		{
-		    memset(string,0,40);
-		    strncpy(string,messageString+start,i);
+		    memset(string, 0, 40);
+		    strncpy(string, messageString+start, i);
 		    start += i+1;
 		    break;
 		}
 				
-	    if (i == strlen(messageString+start))
+	    if ((unsigned)i == strlen(messageString+start))
 	    {
-		strcpy(string,messageString+start);
-		start += i;
+            strcpy(string,messageString+start);
+            start += i;
 	    }
 				
 	    x = 160 - M_StringWidth(string)/2;

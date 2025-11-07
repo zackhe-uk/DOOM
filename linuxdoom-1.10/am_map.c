@@ -21,7 +21,7 @@
 //
 //-----------------------------------------------------------------------------
 
-static const char rcsid[] = "$Id: am_map.c,v 1.4 1997/02/03 21:24:33 b1 Exp $";
+//static const char rcsid[] = "$Id: am_map.c,v 1.4 1997/02/03 21:24:33 b1 Exp $";
 
 #include <stdio.h>
 
@@ -458,7 +458,7 @@ void AM_changeWindowLoc(void)
 void AM_initVariables(void)
 {
     int pnum;
-    static event_t st_notify = { ev_keyup, AM_MSGENTERED };
+    static event_t st_notify = { ev_keyup, AM_MSGENTERED, 0, 0 };
 
     automapactive = true;
     fb = screens[0];
@@ -559,7 +559,7 @@ void AM_LevelInit(void)
 //
 void AM_Stop (void)
 {
-    static event_t st_notify = { 0, ev_keyup, AM_MSGEXITED };
+    static event_t st_notify = { 0, ev_keyup, AM_MSGEXITED, 0 };
 
     AM_unloadPics();
     automapactive = false;
@@ -783,7 +783,7 @@ void AM_doFollowPlayer(void)
 //
 void AM_updateLightLev(void)
 {
-    static nexttic = 0;
+    static int nexttic = 0;
     //static int litelevels[] = { 0, 3, 5, 6, 6, 7, 7, 7 };
     static int litelevels[] = { 0, 4, 7, 10, 12, 14, 15, 15 };
     static int litelevelscnt = 0;
@@ -850,21 +850,21 @@ AM_clipMline
 {
     enum
     {
-	LEFT	=1,
-	RIGHT	=2,
-	BOTTOM	=4,
-	TOP	=8
+	LEFT	= 1,
+	RIGHT	= 2,
+	BOTTOM	= 4,
+	TOP	= 8
     };
-    
-    register	outcode1 = 0;
-    register	outcode2 = 0;
-    register	outside;
-    
+
+    register	int outcode1 = 0;
+    register	int outcode2 = 0;
+    register	int outside;
+
     fpoint_t	tmp;
     int		dx;
     int		dy;
 
-    
+
 #define DOOUTCODE(oc, mx, my) \
     (oc) = 0; \
     if ((my) < 0) (oc) |= TOP; \
@@ -872,7 +872,7 @@ AM_clipMline
     if ((mx) < 0) (oc) |= LEFT; \
     else if ((mx) >= f_w) (oc) |= RIGHT;
 
-    
+
     // do trivial rejects and outcodes
     if (ml->a.y > m_y2)
 	outcode1 = TOP;
@@ -988,8 +988,8 @@ AM_drawFline
     register int ax;
     register int ay;
     register int d;
-    
-    static fuck = 0;
+
+    //static fuck = 0;
 
     // For debugging only
     if (      fl->a.x < 0 || fl->a.x >= f_w
@@ -997,7 +997,7 @@ AM_drawFline
 	   || fl->b.x < 0 || fl->b.x >= f_w
 	   || fl->b.y < 0 || fl->b.y >= f_h)
     {
-	fprintf(stderr, "fuck %d \r", fuck++);
+	//fprintf(stderr, "fuck %d \r", fuck++);
 	return;
     }
 

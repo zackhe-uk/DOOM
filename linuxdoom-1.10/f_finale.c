@@ -22,8 +22,7 @@
 //-----------------------------------------------------------------------------
 
 
-static const char
-rcsid[] = "$Id: f_finale.c,v 1.5 1997/02/03 21:26:34 b1 Exp $";
+//static const char rcsid[] = "$Id: f_finale.c,v 1.5 1997/02/03 21:26:34 b1 Exp $";
 
 #include <ctype.h>
 
@@ -238,13 +237,13 @@ void F_Ticker (void)
     if ( gamemode == commercial)
 	return;
 		
-    if (!finalestage && finalecount>strlen (finaletext)*TEXTSPEED + TEXTWAIT)
+    if (!finalestage && (unsigned)finalecount > strlen(finaletext) * TEXTSPEED + TEXTWAIT)
     {
-	finalecount = 0;
-	finalestage = 1;
-	wipegamestate = -1;		// force a wipe
-	if (gameepisode == 3)
-	    S_StartMusic (mus_bunny);
+		finalecount = 0;
+		finalestage = 1;
+		wipegamestate = -1;		// force a wipe
+		if (gameepisode == 3)
+			S_StartMusic (mus_bunny);
     }
 }
 
@@ -689,7 +688,7 @@ void F_BunnyScroll (void)
 	laststage = stage;
     }
 	
-    sprintf (name,"END%i",stage);
+    snprintf (name, sizeof(name), "END%i", stage);
     V_DrawPatch ((SCREENWIDTH-13*8)/2, (SCREENHEIGHT-8*8)/2,0, W_CacheLumpName (name,PU_CACHE));
 }
 

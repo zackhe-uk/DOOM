@@ -22,8 +22,7 @@
 //
 //-----------------------------------------------------------------------------
 
-static const char
-rcsid[] = "$Id: p_setup.c,v 1.5 1997/02/03 22:45:12 b1 Exp $";
+//static const char rcsid[] = "$Id: p_setup.c,v 1.5 1997/02/03 22:45:12 b1 Exp $";
 
 
 #include <math.h>
@@ -627,18 +626,18 @@ P_SetupLevel
     // find map name
     if ( gamemode == commercial)
     {
-	if (map<10)
-	    sprintf (lumpname,"map0%i", map);
-	else
-	    sprintf (lumpname,"map%i", map);
+        if (map<10)
+            snprintf (lumpname, sizeof(lumpname), "map0%i", map);
+        else
+            snprintf (lumpname, sizeof(lumpname), "map%i", map);
     }
     else
     {
-	lumpname[0] = 'E';
-	lumpname[1] = '0' + episode;
-	lumpname[2] = 'M';
-	lumpname[3] = '0' + map;
-	lumpname[4] = 0;
+        lumpname[0] = 'E';
+        lumpname[1] = '0' + episode;
+        lumpname[2] = 'M';
+        lumpname[3] = '0' + map;
+        lumpname[4] = 0;
     }
 
     lumpnum = W_GetNumForName (lumpname);

@@ -22,8 +22,7 @@
 //-----------------------------------------------------------------------------
 
 
-static const char
-rcsid[] = "$Id: w_wad.c,v 1.5 1997/02/03 16:47:57 b1 Exp $";
+//static const char rcsid[] = "$Id: w_wad.c,v 1.5 1997/02/03 16:47:57 b1 Exp $";
 
 
 #ifdef NORMALUNIX
@@ -213,7 +212,7 @@ void W_AddFile (char *filename)
 	
     storehandle = reloadname ? -1 : handle;
 	
-    for (i=startlump ; i<numlumps ; i++,lump_p++, fileinfo++)
+    for (i = startlump; i < (unsigned)numlumps; i++, lump_p++, fileinfo++)
     {
 	lump_p->handle = storehandle;
 	lump_p->position = LONG(fileinfo->filepos);
@@ -243,11 +242,10 @@ void W_Reload (void)
     int			length;
     filelump_t*		fileinfo;
 	
-    if (!reloadname)
-	return;
+    if (!reloadname) return;
 		
-    if ( (handle = open (reloadname,O_RDONLY | O_BINARY)) == -1)
-	I_Error ("W_Reload: couldn't open %s",reloadname);
+    if ( (handle = open (reloadname, O_RDONLY | O_BINARY)) == -1)
+	    I_Error ("W_Reload: couldn't open %s",reloadname);
 
     read (handle, &header, sizeof(header));
     lumpcount = LONG(header.numlumps);
@@ -260,15 +258,13 @@ void W_Reload (void)
     // Fill in lumpinfo
     lump_p = &lumpinfo[reloadlump];
 	
-    for (i=reloadlump ;
-	 i<reloadlump+lumpcount ;
-	 i++,lump_p++, fileinfo++)
+    for ( i= reloadlump; i < (unsigned)(reloadlump + lumpcount); i++, lump_p++, fileinfo++)
     {
-	if (lumpcache[i])
-	    Z_Free (lumpcache[i]);
+        if (lumpcache[i])
+            Z_Free (lumpcache[i]);
 
-	lump_p->position = LONG(fileinfo->filepos);
-	lump_p->size = LONG(fileinfo->size);
+        lump_p->position = LONG(fileinfo->filepos);
+        lump_p->size = LONG(fileinfo->size);
     }
 	
     close (handle);
@@ -297,7 +293,7 @@ void W_InitMultipleFiles (char** filenames)
     numlumps = 0;
 
     // will be realloced as lumps are added
-    lumpinfo = malloc(1);	
+    lumpinfo = malloc(sizeof(lumpinfo_t));	
 
     for ( ; *filenames ; filenames++)
 	W_AddFile (*filenames);
@@ -479,7 +475,7 @@ W_CacheLumpNum
 {
     byte*	ptr;
 
-    if ((unsigned)lump >= numlumps)
+    if ((int)(unsigned)lump >= numlumps)
 	I_Error ("W_CacheLumpNum: %i >= numlumps",lump);
 		
     if (!lumpcache[lump])

@@ -20,8 +20,7 @@
 //
 //-----------------------------------------------------------------------------
 
-static const char
-rcsid[] = "$Id: m_bbox.c,v 1.1 1997/02/03 22:45:10 b1 Exp $";
+//static const char rcsid[] = "$Id: m_bbox.c,v 1.1 1997/02/03 22:45:10 b1 Exp $";
 
 #include <stdlib.h>
 #include <string.h>
@@ -163,7 +162,7 @@ void PacketGet (void)
     int			i;
     int			c;
     struct sockaddr_in	fromaddress;
-    int			fromlen;
+    socklen_t			fromlen;
     doomdata_t		sw;
 				
     fromlen = sizeof(fromaddress);
@@ -171,17 +170,17 @@ void PacketGet (void)
 		  , (struct sockaddr *)&fromaddress, &fromlen );
     if (c == -1 )
     {
-	if (errno != EWOULDBLOCK)
-	    I_Error ("GetPacket: %s",strerror(errno));
-	doomcom->remotenode = -1;		// no packet
-	return;
+        if (errno != EWOULDBLOCK)
+            I_Error ("GetPacket: %s", strerror(errno));
+        doomcom->remotenode = -1;		// no packet
+        return;
     }
 
     {
-	static int first=1;
-	if (first)
-	    printf("len=%d:p=[0x%x 0x%x] \n", c, *(int*)&sw, *((int*)&sw+1));
-	first = 0;
+        static int first=1;
+        if (first)
+            printf("len=%d:p=[0x%x 0x%x] \n", c, *(int*)&sw, *((int*)&sw+1));
+        first = 0;
     }
 
     // find remote node number

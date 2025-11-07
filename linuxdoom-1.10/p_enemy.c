@@ -23,8 +23,7 @@
 //
 //-----------------------------------------------------------------------------
 
-static const char
-rcsid[] = "$Id: p_enemy.c,v 1.5 1997/02/03 22:45:11 b1 Exp $";
+//static const char rcsid[] = "$Id: p_enemy.c,v 1.5 1997/02/03 22:45:11 b1 Exp $";
 
 #include <stdlib.h>
 
@@ -400,7 +399,7 @@ void P_NewChaseDir (mobj_t*	actor)
 	&& d[2] != DI_NODIR)
     {
 	actor->movedir = diags[((deltay<0)<<1)+(deltax>0)];
-	if (actor->movedir != turnaround && P_TryWalk(actor))
+	if (actor->movedir != (int)turnaround && P_TryWalk(actor))
 	    return;
     }
 
@@ -430,7 +429,7 @@ void P_NewChaseDir (mobj_t*	actor)
 
     if (d[2]!=DI_NODIR)
     {
-	actor->movedir =d[2];
+	actor->movedir = d[2];
 
 	if (P_TryWalk(actor))
 	    return;
@@ -453,7 +452,7 @@ void P_NewChaseDir (mobj_t*	actor)
 	      tdir<=DI_SOUTHEAST;
 	      tdir++ )
 	{
-	    if (tdir!=turnaround)
+	    if (tdir != (int) turnaround)
 	    {
 		actor->movedir =tdir;
 		
@@ -468,7 +467,7 @@ void P_NewChaseDir (mobj_t*	actor)
 	      tdir != (DI_EAST-1);
 	      tdir-- )
 	{
-	    if (tdir!=turnaround)
+	    if (tdir != (int)turnaround)
 	    {
 		actor->movedir =tdir;
 		

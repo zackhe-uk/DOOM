@@ -21,8 +21,7 @@
 //
 //-----------------------------------------------------------------------------
 
-static const char
-rcsid[] = "$Id: wi_stuff.c,v 1.7 1997/02/03 22:45:13 b1 Exp $";
+//static const char rcsid[] = "$Id: wi_stuff.c,v 1.7 1997/02/03 22:45:13 b1 Exp $";
 
 #include <stdio.h>
 
@@ -223,41 +222,46 @@ static point_t lnodes[NUMEPISODES][NUMMAPS] =
 // Using patches saves a lot of space,
 //  as they replace 320x200 full screen frames.
 //
+#define ANIM(type, period, nanims, x, y, nexttic)            \
+   { (type), (period), (nanims), { (x), (y) }, (nexttic),    \
+     0, { NULL, NULL, NULL }, 0, 0, 0, 0 }
+
+
 static anim_t epsd0animinfo[] =
 {
-    { ANIM_ALWAYS, TICRATE/3, 3, { 224, 104 } },
-    { ANIM_ALWAYS, TICRATE/3, 3, { 184, 160 } },
-    { ANIM_ALWAYS, TICRATE/3, 3, { 112, 136 } },
-    { ANIM_ALWAYS, TICRATE/3, 3, { 72, 112 } },
-    { ANIM_ALWAYS, TICRATE/3, 3, { 88, 96 } },
-    { ANIM_ALWAYS, TICRATE/3, 3, { 64, 48 } },
-    { ANIM_ALWAYS, TICRATE/3, 3, { 192, 40 } },
-    { ANIM_ALWAYS, TICRATE/3, 3, { 136, 16 } },
-    { ANIM_ALWAYS, TICRATE/3, 3, { 80, 16 } },
-    { ANIM_ALWAYS, TICRATE/3, 3, { 64, 24 } }
+    ANIM(ANIM_ALWAYS, TICRATE/3, 3, 224, 104, 0),
+    ANIM(ANIM_ALWAYS, TICRATE/3, 3, 184, 160, 0),
+    ANIM(ANIM_ALWAYS, TICRATE/3, 3, 112, 136, 0),
+    ANIM(ANIM_ALWAYS, TICRATE/3, 3, 72, 112, 0),
+    ANIM(ANIM_ALWAYS, TICRATE/3, 3, 88, 96, 0),
+    ANIM(ANIM_ALWAYS, TICRATE/3, 3, 64, 48, 0),
+    ANIM(ANIM_ALWAYS, TICRATE/3, 3, 192, 40, 0),
+    ANIM(ANIM_ALWAYS, TICRATE/3, 3, 136, 16, 0),
+    ANIM(ANIM_ALWAYS, TICRATE/3, 3, 80, 16, 0),
+    ANIM(ANIM_ALWAYS, TICRATE/3, 3, 64, 24, 0),
 };
 
 static anim_t epsd1animinfo[] =
 {
-    { ANIM_LEVEL, TICRATE/3, 1, { 128, 136 }, 1 },
-    { ANIM_LEVEL, TICRATE/3, 1, { 128, 136 }, 2 },
-    { ANIM_LEVEL, TICRATE/3, 1, { 128, 136 }, 3 },
-    { ANIM_LEVEL, TICRATE/3, 1, { 128, 136 }, 4 },
-    { ANIM_LEVEL, TICRATE/3, 1, { 128, 136 }, 5 },
-    { ANIM_LEVEL, TICRATE/3, 1, { 128, 136 }, 6 },
-    { ANIM_LEVEL, TICRATE/3, 1, { 128, 136 }, 7 },
-    { ANIM_LEVEL, TICRATE/3, 3, { 192, 144 }, 8 },
-    { ANIM_LEVEL, TICRATE/3, 1, { 128, 136 }, 8 }
+    ANIM(ANIM_LEVEL, TICRATE/3, 1, 128, 136, 1),
+    ANIM(ANIM_LEVEL, TICRATE/3, 1, 128, 136, 2),
+    ANIM(ANIM_LEVEL, TICRATE/3, 1, 128, 136, 3),
+    ANIM(ANIM_LEVEL, TICRATE/3, 1, 128, 136, 4),
+    ANIM(ANIM_LEVEL, TICRATE/3, 1, 128, 136, 5),
+    ANIM(ANIM_LEVEL, TICRATE/3, 1, 128, 136, 6),
+    ANIM(ANIM_LEVEL, TICRATE/3, 1, 128, 136, 7),
+    ANIM(ANIM_LEVEL, TICRATE/3, 3, 192, 144, 8),
+    ANIM(ANIM_LEVEL, TICRATE/3, 1, 128, 136, 8),
 };
 
 static anim_t epsd2animinfo[] =
 {
-    { ANIM_ALWAYS, TICRATE/3, 3, { 104, 168 } },
-    { ANIM_ALWAYS, TICRATE/3, 3, { 40, 136 } },
-    { ANIM_ALWAYS, TICRATE/3, 3, { 160, 96 } },
-    { ANIM_ALWAYS, TICRATE/3, 3, { 104, 80 } },
-    { ANIM_ALWAYS, TICRATE/3, 3, { 120, 32 } },
-    { ANIM_ALWAYS, TICRATE/4, 3, { 40, 0 } }
+    ANIM(ANIM_ALWAYS, TICRATE/3, 3, 104, 168, 0),
+    ANIM(ANIM_ALWAYS, TICRATE/3, 3, 40, 136, 0),
+    ANIM(ANIM_ALWAYS, TICRATE/3, 3, 160, 96, 0),
+    ANIM(ANIM_ALWAYS, TICRATE/3, 3, 104, 80, 0),
+    ANIM(ANIM_ALWAYS, TICRATE/3, 3, 120, 32, 0),
+    ANIM(ANIM_ALWAYS, TICRATE/4, 3, 40, 0, 0),
 };
 
 static int NUMANIMS[NUMEPISODES] =
@@ -1543,14 +1547,14 @@ void WI_loadData(void)
     anim_t*	a;
 
     if (gamemode == commercial)
-	strcpy(name, "INTERPIC");
+		strcpy(name, "INTERPIC");
     else 
-	sprintf(name, "WIMAP%d", wbs->epsd);
+		snprintf(name, sizeof(name), "WIMAP%d", wbs->epsd);
     
     if ( gamemode == retail )
     {
-      if (wbs->epsd == 3)
-	strcpy(name,"INTERPIC");
+    	if (wbs->epsd == 3)
+			strcpy(name,"INTERPIC");
     }
 
     // background
@@ -1574,9 +1578,9 @@ void WI_loadData(void)
 	NUMCMAPS = 32;								
 	lnames = (patch_t **) Z_Malloc(sizeof(patch_t*) * NUMCMAPS,
 				       PU_STATIC, 0);
-	for (i=0 ; i<NUMCMAPS ; i++)
+	for (i = 0 ; i < NUMCMAPS ; i++)
 	{								
-	    sprintf(name, "CWILV%2.2d", i);
+	    snprintf(name, sizeof(name), "CWILV%2.2d", i);
 	    lnames[i] = W_CacheLumpName(name, PU_STATIC);
 	}					
     }
@@ -1584,9 +1588,9 @@ void WI_loadData(void)
     {
 	lnames = (patch_t **) Z_Malloc(sizeof(patch_t*) * NUMMAPS,
 				       PU_STATIC, 0);
-	for (i=0 ; i<NUMMAPS ; i++)
+	for (i = 0 ; i < NUMMAPS ; i++)
 	{
-	    sprintf(name, "WILV%d%d", wbs->epsd, i);
+	    snprintf(name, sizeof(name), "WILV%d%d", wbs->epsd, i);
 	    lnames[i] = W_CacheLumpName(name, PU_STATIC);
 	}
 
@@ -1601,24 +1605,24 @@ void WI_loadData(void)
 	
 	if (wbs->epsd < 3)
 	{
-	    for (j=0;j<NUMANIMS[wbs->epsd];j++)
+	    for ( j= 0; j < NUMANIMS[wbs->epsd]; j++)
 	    {
-		a = &anims[wbs->epsd][j];
-		for (i=0;i<a->nanims;i++)
-		{
-		    // MONDO HACK!
-		    if (wbs->epsd != 1 || j != 8) 
-		    {
-			// animations
-			sprintf(name, "WIA%d%.2d%.2d", wbs->epsd, j, i);  
-			a->p[i] = W_CacheLumpName(name, PU_STATIC);
-		    }
-		    else
-		    {
-			// HACK ALERT!
-			a->p[i] = anims[1][4].p[i]; 
-		    }
-		}
+			a = &anims[wbs->epsd][j];
+			for (i = 0; i < a->nanims; i++)
+			{
+				// MONDO HACK!
+				if (wbs->epsd != 1 || j != 8) 
+				{
+					// animations
+					snprintf(name, sizeof(name), "WIA%d%.2d%.2d", wbs->epsd, j, i);  
+					a->p[i] = W_CacheLumpName(name, PU_STATIC);
+				}
+				else
+				{
+					// HACK ALERT!
+					a->p[i] = anims[1][4].p[i]; 
+				}
+			}
 	    }
 	}
     }
@@ -1695,11 +1699,11 @@ void WI_loadData(void)
     for (i=0 ; i<MAXPLAYERS ; i++)
     {
 	// "1,2,3,4"
-	sprintf(name, "STPB%d", i);      
+	snprintf(name, sizeof(name), "STPB%d", i);      
 	p[i] = W_CacheLumpName(name, PU_STATIC);
 
 	// "1,2,3,4"
-	sprintf(name, "WIBP%d", i+1);     
+	snprintf(name, sizeof(name), "WIBP%d", i+1);     
 	bp[i] = W_CacheLumpName(name, PU_STATIC);
     }
 

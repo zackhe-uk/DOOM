@@ -21,8 +21,7 @@
 //
 //-----------------------------------------------------------------------------
 
-static const char
-rcsid[] = "$Id: z_zone.c,v 1.4 1997/02/03 16:47:58 b1 Exp $";
+//static const char rcsid[] = "$Id: z_zone.c,v 1.4 1997/02/03 16:47:58 b1 Exp $";
 
 #include "z_zone.h"
 #include "i_system.h"
@@ -331,7 +330,7 @@ Z_DumpHeap
     memblock_t*	block;
 	
     printf ("zone size: %i  location: %p\n",
-	    mainzone->size,mainzone);
+	    mainzone->size,(void*)mainzone);
     
     printf ("tag range: %i to %i\n",
 	    lowtag, hightag);
@@ -340,7 +339,7 @@ Z_DumpHeap
     {
 	if (block->tag >= lowtag && block->tag <= hightag)
 	    printf ("block:%p    size:%7i    user:%p    tag:%3i\n",
-		    block, block->size, block->user, block->tag);
+		    (void*)block, block->size, (void*)block->user, block->tag);
 		
 	if (block->next == &mainzone->blocklist)
 	{
@@ -367,12 +366,12 @@ void Z_FileDumpHeap (FILE* f)
 {
     memblock_t*	block;
 	
-    fprintf (f,"zone size: %i  location: %p\n",mainzone->size,mainzone);
+    fprintf (f,"zone size: %i  location: %p\n",mainzone->size,(void*)mainzone);
 	
     for (block = mainzone->blocklist.next ; ; block = block->next)
     {
 	fprintf (f,"block:%p    size:%7i    user:%p    tag:%3i\n",
-		 block, block->size, block->user, block->tag);
+		 (void*)block, block->size, (void*)block->user, block->tag);
 		
 	if (block->next == &mainzone->blocklist)
 	{

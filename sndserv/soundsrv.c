@@ -43,11 +43,14 @@
 #include <math.h>
 #include <sys/types.h>
 #include <stdio.h>
+#include <string.h>
 #include <fcntl.h>
 #include <sys/ioctl.h>
 #include <unistd.h>
 #include <stdlib.h>
+#ifdef LINUX
 #include <malloc.h>
+#endif
 #include <sys/stat.h>
 #include <sys/time.h>
 

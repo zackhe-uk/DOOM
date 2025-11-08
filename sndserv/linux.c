@@ -39,8 +39,14 @@
 #include <stdio.h>
 #include <fcntl.h>
 #include <unistd.h>
+#include <sys/ioctl.h>
 
+#ifdef USE_OSS
 #include <linux/soundcard.h>
+#else
+#include <pulse/pulseaudio.h>
+#include <pulse/simple.h>
+#endif
 
 #include "soundsrv.h"
 
@@ -75,27 +81,53 @@ I_InitSound
 {
 
     int i;
-                
+
+
+#ifdef USE_OSS
     audio_fd = open("/dev/dsp", O_WRONLY);
-    if (audio_fd<0)
+    if (audio_fd < 0)
         fprintf(stderr, "Could not open /dev/dsp\n");
          
                      
-    i = 11 | (2<<16);                                           
+    i = (2 << 16) | 11; // max 2 fragments,  11 = fragment size of 2048byte
     myioctl(audio_fd, SNDCTL_DSP_SETFRAGMENT, &i);
                     
     myioctl(audio_fd, SNDCTL_DSP_RESET, 0);
-    i=11025;
+
+    i = samplerate; // meant to be 11025 doesn't matter as it only really passes in 11025 anyway
     myioctl(audio_fd, SNDCTL_DSP_SPEED, &i);
-    i=1;    
+
+#ifdef LEGACY_OSS
+    i = 1;
     myioctl(audio_fd, SNDCTL_DSP_STEREO, &i);
-            
+#else
+    i = 2;
+    myioctl(audio_fd, SNDCTL_DSP_CHANNELS, &i);
+#endif
     myioctl(audio_fd, SNDCTL_DSP_GETFMTS, &i);
-    if (i&=AFMT_S16_LE)    
+    if (i &= AFMT_S16_LE)    
         myioctl(audio_fd, SNDCTL_DSP_SETFMT, &i);
     else
-        fprintf(stderr, "Could not play signed 16 data\n");
+        fprintf(stderr, "Cannot play signed 16 data!\n");
+#else
+    pa_simple *s;
+    pa_sample_spec ss;
+ 
+    ss.format = PA_SAMPLE_S16LE;
+    ss.channels = 2;
+    ss.rate = samplerate;
 
+    s = pa_simple_new(NULL,               // Use the default server.
+                      "ROOM",           // Our application's name.
+                      PA_STREAM_PLAYBACK,
+                      NULL,               // Use the default device.
+                      "Music",            // Description of our stream.
+                      &ss,                // Our sample format.
+                      NULL,               // Use default channel map
+                      NULL,               // Use default buffering attributes.
+                      NULL               // Ignore error code.
+    );
+#endif
 }
 
 void
@@ -103,14 +135,16 @@ I_SubmitOutputBuffer
 ( void*	samples,
   int	samplecount )
 {
+#ifdef USE_OSS
     write(audio_fd, samples, samplecount*4);
+#endif
 }
 
 void I_ShutdownSound(void)
 {
-
+#ifdef USE_OSS
     close(audio_fd);
-
+#endif
 }
 
 void I_ShutdownMusic(void)

@@ -144,13 +144,13 @@ static void derror(char* msg)
 }
 static void numerouno(unsigned char* convertme, unsigned int chlen)
 {
-	for(int i = 0; i < chlen; i++)
+	for(unsigned i = 0; i < chlen; i++)
 		convertme[i] -= convertme[i] >= 'a' ? 'a' - 10 : '0';
 }
 static void numerohex(unsigned char* convertme, unsigned int chlen, int num)
 {
-	for(int i = 0; i < chlen; i++) {
-		convertme[i]  = (num >> (chlen-(i + 1)) * 4) & 0xf;
+	for(unsigned i = 0; i < chlen; i++) {
+		convertme[i]  = (num >> (chlen-((unsigned)i + 1)) * 4) & 0xf;
 		convertme[i] += convertme[i] > 9 ? ('a' - 10) : '0';
 	}
 }
@@ -283,15 +283,15 @@ grabdata
     longsound = 0;
 
     if (! access(doom2fwad, R_OK) )
-	name = doom2fwad;
+		name = doom2fwad;
     else if (! access(doom2wad, R_OK) )
-	name = doom2wad;
+		name = doom2wad;
     else if (! access(doomuwad, R_OK) )
-	name = doomuwad;
+		name = doomuwad;
     else if (! access(doomwad, R_OK) )
-	name = doomwad;
+		name = doomwad;
     else if (! access(doom1wad, R_OK) )
-	name = doom1wad;
+		name = doom1wad;
     // else if (! access(DEVDATA "doom2.wad", R_OK) )
     //   name = DEVDATA "doom2.wad";
     //   else if (! access(DEVDATA "doom.wad", R_OK) )
@@ -299,6 +299,7 @@ grabdata
     else
     {
 		derror("Could not find wadfile anywhere");
+		return;
     }
 
     

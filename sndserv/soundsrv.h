@@ -41,6 +41,8 @@
 
 #define SS_MIXCHAN 8
 
+extern int snd_verbose;
+
 void I_InitMusic(void);
 
 void

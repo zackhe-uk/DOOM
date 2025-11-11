@@ -277,6 +277,10 @@ grabdata
 		{
 			snd_verbose = 0;
 		}
+		if (!strcmp(v[i], "-loud"))
+		{
+			snd_verbose = 2;
+		}
     }
 
     numsounds = NUMSFX;
@@ -302,9 +306,11 @@ grabdata
 		return;
     }
 
-    
-    openwad(name);
-    if (snd_verbose) fprintf(stderr, "loading from [%s]\n", name);
+    if (snd_verbose > 1) fprintf(stderr, "loading from [%s]\n", name);
+	openwad(name);
+	if (snd_verbose > 1) fprintf(stderr, "loaded wad successfully\n");
+
+	if (snd_verbose) fprintf(stderr, "loading from [%s]\n", name);
 
     for (int i = 1; i < NUMSFX; i++)
     {
@@ -316,6 +322,9 @@ grabdata
 			S_sfx[i].data = S_sfx[i].link->data;
 			lengths[i] = lengths[(S_sfx[i].link - S_sfx)/sizeof(sfxinfo_t)];
 		}
+		if(snd_verbose > 1)
+			 fprintf(stderr, "loaded SFX %d of %d\n", i, NUMSFX);
+		
 		// test only
 		//  {
 		//  int fd;
@@ -554,7 +563,7 @@ main
 					}
 					else
 					{
-						if (snd_verbose) fprintf(stderr, "cmd: %c", commandbuf[0]);
+						if (snd_verbose) fprintf(stderr, "cmd: %c\n", commandbuf[0]);
 
 						switch (commandbuf[0])
 						{

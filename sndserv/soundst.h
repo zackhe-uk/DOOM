@@ -149,16 +149,16 @@ enum
 
 enum
 {
-    PC=1,
-    Adlib=2,
-    SB=4,
-    Midi=8
+    PC          = 1,
+    Adlib       = 2,
+    SB          = 4,
+    Midi        = 8
 }; // cards available
 
 enum
 {
-    sfxThrowOut=-1,
-    sfxNotUsed=0
+    sfxThrowOut = -1,
+    sfxNotUsed  =  0
 };
 
 

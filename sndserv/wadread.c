@@ -102,22 +102,31 @@ void**		lumpcache;
 
 #else
 
+#if defined(__x86_64__) || defined(__ppc64__) || defined(__arm64__)
+#define LONG(x) ((int)SwapLONG((unsigned int) (x)))
+#else
 #define LONG(x) ((long)SwapLONG((unsigned long) (x)))
+#endif
 #define SHORT(x) ((short)SwapSHORT((unsigned short) (x)))
 
+#if defined(__x86_64__) || defined(__ppc64__) || defined(__arm64__)
+unsigned int SwapLONG(unsigned int x)
+#else
 unsigned long SwapLONG(unsigned long x)
+#endif
 {
     return
-	(x>>24)
-	| ((x>>8) & 0xff00)
-	| ((x<<8) & 0xff0000)
-	| (x<<24);
+	   (x >> 24 )
+	| ((x >> 8  ) & 0xff00)
+	| ((x << 8  ) & 0xff0000)
+	|  (x << 24 );
 }
 
 unsigned short SwapSHORT(unsigned short x)
 {
     return
-	(x>>8) | (x<<8);
+	   (x >> 8  )
+    |  (x << 8  );
 }
 
 #endif
@@ -167,32 +176,42 @@ void openwad(char* wadname)
     wadfile = open(wadname, O_RDONLY);
 
     if (wadfile < 0)
-	derror("Could not open wadfile");
+	    derror("Could not open wadfile");
+    else if(snd_verbose > 1)
+        fprintf(stderr, "Opened wadfile successfully\n");
 
     read(wadfile, &header, sizeof header);
 
     if (strncmp(header.identification, "IWAD", 4))
-	derror("wadfile has weirdo header");
+	    derror("wadfile has weirdo header");
+    else if(snd_verbose > 1)
+        fprintf(stderr, "nice header there son\n");
 
     numlumps = LONG(header.numlumps);
     tableoffset = LONG(header.infotableofs);
     tablelength = numlumps * sizeof(lumpinfo_t);
     tablefilelength = numlumps * sizeof(filelump_t);
     lumpinfo = (lumpinfo_t *) malloc(tablelength);
-    filetable = (filelump_t *) ((char*)lumpinfo + tablelength - tablefilelength);
+    filetable = (filelump_t *) malloc(tablefilelength);
 
+    if(snd_verbose > 1)
+        fprintf(stderr, "passed all of that\n");
     // get the lumpinfo table
     lseek(wadfile, tableoffset, SEEK_SET);
     read(wadfile, filetable, tablefilelength);
 
+    if(snd_verbose > 1)
+        fprintf(stderr, "read the lumptable\n");
+
     // process the table to make the endianness right and shift it down
-    for (i=0 ; i<numlumps ; i++)
+    for (i = 0; i < numlumps; i++)
     {
-	strncpy(lumpinfo[i].name, filetable[i].name, 8);
-	lumpinfo[i].handle = wadfile;
-	lumpinfo[i].filepos = LONG(filetable[i].filepos);
-	lumpinfo[i].size = LONG(filetable[i].size);
-	// fprintf(stderr, "lump [%.8s] exists\n", lumpinfo[i].name);
+        if(snd_verbose > 1) fprintf(stderr, "%d of %d ", i, numlumps);
+        strncpy(lumpinfo[i].name, filetable[i].name, 8);
+        lumpinfo[i].handle = wadfile;
+        lumpinfo[i].filepos = LONG(filetable[i].filepos);
+        lumpinfo[i].size = LONG(filetable[i].size);
+        if(snd_verbose > 1) fprintf(stderr, "lump [%.8s] exists\n", lumpinfo[i].name);
     }
 
 }
@@ -238,20 +257,20 @@ getsfx
 
     unsigned char*	sfx;
     unsigned char*	paddedsfx;
-    int			i;
+
     int			size;
     int			paddedsize;
     char		name[20];
 
-    sprintf(name, "ds%s", sfxname);
+    if(snd_verbose > 1) fprintf(stderr, "ds%s ", sfxname);
+    snprintf(name, sizeof(name), "ds%s", sfxname);
 
     sfx = (unsigned char *) loadlump(name, &size);
 
     // pad the sound effect out to the mixing buffer size
     paddedsize = ((size-8 + (SAMPLECOUNT-1)) / SAMPLECOUNT) * SAMPLECOUNT;
     paddedsfx = (unsigned char *) realloc(sfx, paddedsize+8);
-    for (i=size ; i<paddedsize+8 ; i++)
-	paddedsfx[i] = 128;
+    for (int i = size; i < paddedsize + 8; i++) paddedsfx[i] = 128;
 
     *len = paddedsize;
     return (void *) (paddedsfx + 8);

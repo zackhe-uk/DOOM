@@ -112,7 +112,7 @@ I_InitSound
 
     audio_ss.format = PA_SAMPLE_S16LE;
     audio_ss.channels = 2;
-    audio_ss.rate = samplerate;
+    audio_ss.rate = 44100; // looks like i can't set it 11025
 
     audio_s = pa_simple_new(NULL,         // Use the default server.
                       "ROOM",             // Our application's name.
@@ -133,7 +133,7 @@ I_SubmitOutputBuffer
   int	samplecount )
 {
 #ifdef USE_OSS
-    write(audio_fd, samples, samplecount*4);
+    write(audio_fd, samples, samplecount * 4);
 #else
     pa_simple_write(audio_s, samples, samplecount * 4, NULL);
 #endif

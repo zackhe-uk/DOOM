@@ -1,8 +1,17 @@
 ## Compiling
+
+> [!WARNING]
+> If you're using Linux, make sure to link the
+> math library using `-lm`!
+>
+> Just put it after `-lpulse` and you should be good!
+
+---
+
 Run:
 
 ```
-gcc *.c -I/opt/homebrew/include -L/opt/homebrew/lib -lpulse-simple -lpulse -o sndserv
+clang *.c -I/opt/homebrew/include -L/opt/homebrew/lib -lpulse-simple -lpulse -o sndserv
 ```
 
 On macOS after running `brew install pulseaudio` and starting the service.
@@ -13,7 +22,7 @@ On macOS after running `brew install pulseaudio` and starting the service.
 Use this if you already have properly configured library and include paths.
 
 ```
-gcc *.c -lpulse-simple -lpulse -o sndserv
+clang *.c -lpulse-simple -lpulse -o sndserv
 ```
 
 ---

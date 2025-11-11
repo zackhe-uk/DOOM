@@ -40,6 +40,7 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <sys/ioctl.h>
+#include <errno.h>
 
 #ifdef USE_OSS
 #include <linux/soundcard.h>
@@ -58,11 +59,10 @@ myioctl
 ( int	fd,
   int	command,
   int*	arg )
-{   
+{
     int		rc;
-    extern int	errno;
-    
-    rc = ioctl(fd, command, arg);  
+
+    rc = ioctl(fd, command, arg);
     if (rc < 0)
     {
 	fprintf(stderr, "ioctl(dsp,%d,arg) failed\n", command);

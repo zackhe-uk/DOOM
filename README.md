@@ -2,9 +2,9 @@
 ### _Ready DOOM_
 
 > [!CAUTION]
-> The codebase, in it's current state, is COMPLETELY untested.
+> The main DOOM codebase, in it's current state, is COMPLETELY untested.
 >
-> Due to macOS/Linux limitations and deprecations, it will not
+> Due to macOS limitations and Linux deprecations, it will not
 > be tested until I finish moving the video handling Linuxdoom
 > code to SDL2 or SDL3.
 >
@@ -28,3 +28,4 @@ the same, helping experienced modders be familliar.
 - supressed/fixed most warnings
 - PulseAudio sndserver with optional OSS (`-DUSE_OSS` in `CFLAGS`)
 - misc sndserver improvements
+- add working macOS support for soundserver

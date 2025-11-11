@@ -1,29 +1,35 @@
 ## Compiling
-do
+Run:
 
 ```
 gcc *.c -I/opt/homebrew/include -L/opt/homebrew/lib -lpulse-simple -lpulse -o sndserv
 ```
 
-on macOS after running `brew install pulseaudio` and starting the service
+On macOS after running `brew install pulseaudio` and starting the service.
 
 
-and
+---
 
+Use this if you already have properly configured library and include paths.
 
 ```
 gcc *.c -lpulse-simple -lpulse -o sndserv
 ```
 
+---
 
-if you already have properly configured paths
+Or on my system for a debug build:
 
+```
+clang *.c --save-temps -g -O0 -I/opt/homebrew/include -L/opt/homebrew/lib -lpulse-simple -lpulse -Wall -Wextra -Wpedantic -Wno-gnu -o sndserv; rm -rf sndserv.dSYM/; rm *.bc *.s *.i; dsymutil sndserv
+```
 
-
+---
 
 
 
 
 Congrats. You did it. Great job.
 
+Have fun!
 -MP

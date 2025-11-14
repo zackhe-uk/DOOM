@@ -216,16 +216,15 @@ void W_AddFile (char *filename)
 	
     storehandle = reloadname ? -1 : handle;
 	
-    for (i = startlump; i < (unsigned)numlumps; i++, lump_p++, fileinfo++)
+    for (i = startlump; (int)i < numlumps; i++, lump_p++, fileinfo++)
     {
-	lump_p->handle = storehandle;
-	lump_p->position = LONG(fileinfo->filepos);
-	lump_p->size = LONG(fileinfo->size);
-	strncpy (lump_p->name, fileinfo->name, 8);
+        lump_p->handle = storehandle;
+        lump_p->position = LONG(fileinfo->filepos);
+        lump_p->size = LONG(fileinfo->size);
+        strncpy (lump_p->name, fileinfo->name, 8);
     }
 	
-    if (reloadname)
-	close (handle);
+    if (reloadname) close (handle);
 }
 
 
@@ -262,7 +261,7 @@ void W_Reload (void)
     // Fill in lumpinfo
     lump_p = &lumpinfo[reloadlump];
 	
-    for ( i= reloadlump; i < (unsigned)(reloadlump + lumpcount); i++, lump_p++, fileinfo++)
+    for ( i = reloadlump; (int)i < (reloadlump + lumpcount); i++, lump_p++, fileinfo++)
     {
         if (lumpcache[i])
             Z_Free (lumpcache[i]);

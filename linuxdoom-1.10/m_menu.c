@@ -737,7 +737,7 @@ void M_QuickLoad(void)
 	M_StartMessage(QSAVESPOT,NULL,false);
 	return;
     }
-    snprintf(tempstring, sizeof(tempstring), savegamestrings[quickSaveSlot]);
+    snprintf(tempstring, sizeof(tempstring), QLPROMPT, savegamestrings[quickSaveSlot]);
     M_StartMessage(tempstring,M_QuickLoadResponse,true);
 }
 

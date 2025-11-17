@@ -40,6 +40,10 @@
 #include <fcntl.h>
 #endif
 
+#ifdef EMSCRIPTEN
+#include <emscripten.h>
+#include <emscripten/html5.h>
+#endif
 
 #include "doomdef.h"
 #include "doomstat.h"
@@ -78,7 +82,7 @@
 #include "d_main.h"
 
 //
-// D-DoomLoop()
+// D_DoomLoop()
 // Not a globally visible function,
 //  just included for source reference,
 //  called by D_DoomMain, never exits.
@@ -345,7 +349,52 @@ void D_Display (void)
     } while (!done);
 }
 
+// internal function to do the doom loop
+#ifndef EMSCRIPTEN
+static void D_DoDoomLoop()
+#else
+static bool D_DoDoomLoop(double time, void *userData)
+#endif
+{
+	// frame syncronous IO operations
+	I_StartFrame ();                
+	
+	// process one or more tics
+	if (singletics)
+	{
+		I_StartTic ();
+		D_ProcessEvents ();
+		G_BuildTiccmd (&netcmds[consoleplayer][maketic%BACKUPTICS]);
+		if (advancedemo)
+		D_DoAdvanceDemo ();
+		M_Ticker ();
+		G_Ticker ();
+		gametic++;
+		maketic++;
+	}
+	else
+	{
+		TryRunTics (); // will run at least one tic
+	}
+		
+	S_UpdateSounds (players[consoleplayer].mo);// move positional sounds
 
+	// Update display, next frame, with current state.
+	D_Display ();
+
+#ifndef SNDSERV
+	// Sound mixing for the buffer is snychronous.
+	I_UpdateSound();
+#endif	
+	// Synchronous sound output is explicitly called.
+#ifndef SNDINTR
+	// Update sound output.
+	I_SubmitSound();
+#endif
+#ifdef EMSCRIPTEN
+	return true;
+#endif
+}
 
 //
 //  D_DoomLoop
@@ -367,44 +416,14 @@ void D_DoomLoop (void)
 	
     I_InitGraphics ();
 
+#ifndef EMSCRIPTEN
     while (1)
     {
-	// frame syncronous IO operations
-	I_StartFrame ();                
-	
-	// process one or more tics
-	if (singletics)
-	{
-	    I_StartTic ();
-	    D_ProcessEvents ();
-	    G_BuildTiccmd (&netcmds[consoleplayer][maketic%BACKUPTICS]);
-	    if (advancedemo)
-		D_DoAdvanceDemo ();
-	    M_Ticker ();
-	    G_Ticker ();
-	    gametic++;
-	    maketic++;
-	}
-	else
-	{
-	    TryRunTics (); // will run at least one tic
-	}
-		
-	S_UpdateSounds (players[consoleplayer].mo);// move positional sounds
-
-	// Update display, next frame, with current state.
-	D_Display ();
-
-#ifndef SNDSERV
-	// Sound mixing for the buffer is snychronous.
-	I_UpdateSound();
-#endif	
-	// Synchronous sound output is explicitly called.
-#ifndef SNDINTR
-	// Update sound output.
-	I_SubmitSound();
-#endif
+		D_DoDoomLoop();
     }
+#else
+    emscripten_request_animation_frame_loop(D_DoDoomLoop, 0);
+#endif
 }
 
 

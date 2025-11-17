@@ -52,7 +52,6 @@
 SDL_Window   *S_window   = NULL;
 SDL_Renderer *S_renderer = NULL;
 SDL_Palette  *S_pal      = NULL;
-SDL_Event    *S_event    = NULL;
 SDL_Texture  *image		 = NULL;
 int		S_width;
 int		S_height;
@@ -155,23 +154,26 @@ static int	lastmousex = 0;
 static int	lastmousey = 0;
 boolean		mousemoved = False;
 
-void I_GetEvent(void)
+void I_ProcessEvent(SDL_Event *sdl_event)
 {
     event_t event;
 
-    switch (S_event->type)
+    switch (sdl_event->type)
     {
 		case SDL_EVENT_KEY_DOWN:
 			event.type = ev_keydown;
-			event.data1 = xlatekey(S_event);
+			event.data1 = xlatekey(sdl_event);
 			D_PostEvent(&event);
 			// fprintf(stderr, "k");
 			break;
 		case SDL_EVENT_KEY_UP:
 			event.type = ev_keyup;
-			event.data1 = xlatekey(S_event);
+			event.data1 = xlatekey(sdl_event);
 			D_PostEvent(&event);
 			// fprintf(stderr, "ku");
+			break;
+		case SDL_EVENT_QUIT:
+			I_Quit(); //byebye
 			break;
 			/*
 		case ButtonPress:
@@ -245,7 +247,10 @@ void I_GetEvent(void)
 //
 void I_StartTic (void)
 {
-	// event get until ready stuff
+	SDL_Event    S_event;
+
+	while (SDL_PollEvent(&S_event))
+    	I_ProcessEvent(&S_event);
 }
 
 

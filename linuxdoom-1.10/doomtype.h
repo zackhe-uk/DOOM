@@ -31,6 +31,18 @@ typedef enum {False, True} boolean;
 typedef unsigned char byte;
 #endif
 
+#ifndef __PTRINT__
+#define __PTRINT__
+#if defined(__x86_64__) || defined(__ppc64__) || defined(__arm64__)
+#include <stdint.h>
+typedef intptr_t ptrint;
+typedef uintptr_t uptrint;
+
+#else
+typedef int ptrint;
+#endif
+#endif
+
 
 // Predefined with some OS.
 #if defined(LINUX) && !defined(__APPLE__)

@@ -87,9 +87,9 @@ doomdata_t	reboundstore;
 //
 //
 //
-int NetbufferSize (void)
+ptrint NetbufferSize (void)
 {
-    return (int)&(((doomdata_t *)0)->cmds[netbuffer->numtics]); 
+    return (ptrint)&(((doomdata_t *)0)->cmds[netbuffer->numtics]); 
 }
 
 //
@@ -98,17 +98,17 @@ int NetbufferSize (void)
 unsigned NetbufferChecksum (void)
 {
     unsigned		c;
-    int		i,l;
+    ptrint i, l;
 
-    c = 0x1234567;
+    c = 0x1234567; // yeah real creative i see
 
     // FIXME -endianess?
 #ifdef NORMALUNIX
     return 0;			// byte order problems
 #endif
 
-    l = (NetbufferSize () - (int)&(((doomdata_t *)0)->retransmitfrom))/4;
-    for (i=0 ; i<l ; i++)
+    l = (NetbufferSize () - (ptrint)&(((doomdata_t *)0)->retransmitfrom))/4;
+    for (i = 0; i < l; i++)
 	c += ((unsigned *)&netbuffer->retransmitfrom)[i] * (i+1);
 
     return c & NCMD_CHECKSUM;

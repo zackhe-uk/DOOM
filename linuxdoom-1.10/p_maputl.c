@@ -454,8 +454,8 @@ P_SetThingPosition (mobj_t* thing)
 // BLOCK MAP ITERATORS
 // For each line/thing in the given mapblock,
 // call the passed PIT_* function.
-// If the function returns false,
-// exit with false without checking anything else.
+// If the function returns False,
+// exit with False without checking anything else.
 //
 
 
@@ -482,7 +482,7 @@ P_BlockLinesIterator
 	|| x>=bmapwidth
 	|| y>=bmapheight)
     {
-	return true;
+	return True;
     }
     
     offset = y*bmapwidth+x;
@@ -499,9 +499,9 @@ P_BlockLinesIterator
 	ld->validcount = validcount;
 		
 	if ( !func(ld) )
-	    return false;
+	    return False;
     }
-    return true;	// everything was checked
+    return True;	// everything was checked
 }
 
 
@@ -521,7 +521,7 @@ P_BlockThingsIterator
 	 || x>=bmapwidth
 	 || y>=bmapheight)
     {
-	return true;
+	return True;
     }
     
 
@@ -530,9 +530,9 @@ P_BlockThingsIterator
 	 mobj = mobj->bnext)
     {
 	if (!func( mobj ) )
-	    return false;
+	    return False;
     }
-    return true;
+    return True;
 }
 
 
@@ -555,7 +555,7 @@ int		ptflags;
 //
 // A line is crossed if its endpoints
 // are on opposite sides of the trace.
-// Returns true if earlyout and a solid line hit.
+// Returns True if earlyout and a solid line hit.
 //
 boolean
 PIT_AddLineIntercepts (line_t* ld)
@@ -581,30 +581,30 @@ PIT_AddLineIntercepts (line_t* ld)
     }
     
     if (s1 == s2)
-	return true;	// line isn't crossed
+	return True;	// line isn't crossed
     
     // hit the line
     P_MakeDivline (ld, &dl);
     frac = P_InterceptVector (&trace, &dl);
 
     if (frac < 0)
-	return true;	// behind source
+	return True;	// behind source
 	
     // try to early out the check
     if (earlyout
 	&& frac < FRACUNIT
 	&& !ld->backsector)
     {
-	return false;	// stop checking
+	return False;	// stop checking
     }
     
 	
     intercept_p->frac = frac;
-    intercept_p->isaline = true;
+    intercept_p->isaline = True;
     intercept_p->d.line = ld;
     intercept_p++;
 
-    return true;	// continue
+    return True;	// continue
 }
 
 
@@ -652,7 +652,7 @@ boolean PIT_AddThingIntercepts (mobj_t* thing)
     s2 = P_PointOnDivlineSide (x2, y2, &trace);
 
     if (s1 == s2)
-	return true;		// line isn't crossed
+	return True;		// line isn't crossed
 	
     dl.x = x1;
     dl.y = y1;
@@ -662,20 +662,20 @@ boolean PIT_AddThingIntercepts (mobj_t* thing)
     frac = P_InterceptVector (&trace, &dl);
 
     if (frac < 0)
-	return true;		// behind source
+	return True;		// behind source
 
     intercept_p->frac = frac;
-    intercept_p->isaline = false;
+    intercept_p->isaline = False;
     intercept_p->d.thing = thing;
     intercept_p++;
 
-    return true;		// keep going
+    return True;		// keep going
 }
 
 
 //
 // P_TraverseIntercepts
-// Returns true if the traverser function returns true
+// Returns True if the traverser function returns True
 // for all lines.
 // 
 boolean
@@ -705,7 +705,7 @@ P_TraverseIntercepts
 	}
 	
 	if (dist > maxfrac)
-	    return true;	// checked everything in range		
+	    return True;	// checked everything in range		
 
 #if 0  // UNUSED
     {
@@ -715,17 +715,17 @@ P_TraverseIntercepts
 	    if (scan->frac > maxfrac)
 		*in++ = *scan;
 	intercept_p = in;
-	return false;
+	return False;
     }
 #endif
 
         if ( !func (in) )
-	    return false;	// don't bother going farther
+	    return False;	// don't bother going farther
 
 	in->frac = MAXINT;
     }
 	
-    return true;		// everything was traversed
+    return True;		// everything was traversed
 }
 
 
@@ -735,7 +735,7 @@ P_TraverseIntercepts
 // P_PathTraverse
 // Traces a line from x1,y1 to x2,y2,
 // calling the traverser function for each.
-// Returns true if the traverser function returns true
+// Returns True if the traverser function returns True
 // for all lines.
 //
 boolean
@@ -847,13 +847,13 @@ P_PathTraverse
 	if (flags & PT_ADDLINES)
 	{
 	    if (!P_BlockLinesIterator (mapx, mapy,PIT_AddLineIntercepts))
-		return false;	// early out
+		return False;	// early out
 	}
 	
 	if (flags & PT_ADDTHINGS)
 	{
 	    if (!P_BlockThingsIterator (mapx, mapy,PIT_AddThingIntercepts))
-		return false;	// early out
+		return False;	// early out
 	}
 		
 	if (mapx == xt2

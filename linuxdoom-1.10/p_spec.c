@@ -71,7 +71,7 @@ typedef struct
 //
 typedef struct
 {
-    int		istexture;	// if false, it is a flat
+    int		istexture;	// if False, it is a flat
     char	endname[9];
     char	startname[9];
     int		speed;
@@ -1087,7 +1087,7 @@ void P_UpdateSpecials (void)
 
     
     //	LEVEL TIMER
-    if (levelTimer == true)
+    if (levelTimer == True)
     {
 	levelTimeCount--;
 	if (!levelTimeCount)
@@ -1193,7 +1193,7 @@ int EV_DoDonut(line_t*	line)
 	    s2->specialdata = floor;
 	    floor->thinker.function.acp1 = (actionf_p1) T_MoveFloor;
 	    floor->type = donutRaise;
-	    floor->crush = false;
+	    floor->crush = False;
 	    floor->direction = 1;
 	    floor->sector = s2;
 	    floor->speed = FLOORSPEED / 2;
@@ -1207,7 +1207,7 @@ int EV_DoDonut(line_t*	line)
 	    s1->specialdata = floor;
 	    floor->thinker.function.acp1 = (actionf_p1) T_MoveFloor;
 	    floor->type = lowerFloor;
-	    floor->crush = false;
+	    floor->crush = False;
 	    floor->direction = -1;
 	    floor->sector = s1;
 	    floor->speed = FLOORSPEED / 2;
@@ -1246,12 +1246,12 @@ void P_SpawnSpecials (void)
 
     
     // See if -TIMER needs to be used.
-    levelTimer = false;
+    levelTimer = False;
 	
     i = M_CheckParm("-avg");
     if (i && deathmatch)
     {
-	levelTimer = true;
+	levelTimer = True;
 	levelTimeCount = 20 * 60 * 35;
     }
 	
@@ -1260,7 +1260,7 @@ void P_SpawnSpecials (void)
     {
 	int	time;
 	time = atoi(myargv[i+1]) * 60 * 35;
-	levelTimer = true;
+	levelTimer = True;
 	levelTimeCount = time;
     }
     

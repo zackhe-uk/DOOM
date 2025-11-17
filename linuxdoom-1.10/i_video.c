@@ -188,7 +188,7 @@ void I_StartFrame (void)
 
 static int	lastmousex = 0;
 static int	lastmousey = 0;
-boolean		mousemoved = false;
+boolean		mousemoved = False;
 boolean		shmFinished;
 
 void I_GetEvent(void)
@@ -259,10 +259,10 @@ void I_GetEvent(void)
 	    {
 		D_PostEvent(&event);
 		// fprintf(stderr, "m");
-		mousemoved = false;
+		mousemoved = False;
 	    } else
 	    {
-		mousemoved = true;
+		mousemoved = True;
 	    }
 	}
 	break;
@@ -272,7 +272,7 @@ void I_GetEvent(void)
 	break;
 	
       default:
-	if (doShm && X_event.type == X_shmeventtype) shmFinished = true;
+	if (doShm && X_event.type == X_shmeventtype) shmFinished = True;
 	break;
     }
 
@@ -333,7 +333,7 @@ void I_StartTic (void)
 	}
     }
 
-    mousemoved = false;
+    mousemoved = False;
 
 }
 
@@ -494,7 +494,7 @@ void I_FinishUpdate (void)
 	    I_Error("XShmPutImage() failed\n");
 
 	// wait for it to finish and processes all input events
-	shmFinished = false;
+	shmFinished = False;
 	do
 	{
 	    I_GetEvent();
@@ -540,7 +540,7 @@ void UploadNewPalette(Colormap cmap, byte *palette)
 
     register int	i;
     register int	c;
-    static boolean	firstcall = true;
+    static boolean	firstcall = True;
 
 #ifdef __cplusplus
     if (X_visualinfo.c_class == PseudoColor && X_visualinfo.depth == 8)
@@ -551,7 +551,7 @@ void UploadNewPalette(Colormap cmap, byte *palette)
 	    // initialize the colormap
 	    if (firstcall)
 	    {
-		firstcall = false;
+		firstcall = False;
 		for (i=0 ; i<256 ; i++)
 		{
 		    colors[i].pixel = i;
@@ -784,7 +784,7 @@ void I_InitGraphics(void)
 	    d = displayname;
 	    while (*d && (*d != ':')) d++;
 	    if (*d) *d = 0;
-	    if (!(!strcasecmp(displayname, "unix") || !*displayname)) doShm = false;
+	    if (!(!strcasecmp(displayname, "unix") || !*displayname)) doShm = False;
 	}
     }
 

@@ -311,7 +311,7 @@ void P_LoadThings (int lump)
     mt = (mapthing_t *)data;
     for (i=0 ; i<numthings ; i++, mt++)
     {
-	spawn = true;
+	spawn = True;
 
 	// Do not spawn cool, new monsters if !commercial
 	if ( gamemode != commercial)
@@ -328,11 +328,11 @@ void P_LoadThings (int lump)
 	      case 65:	// Former Human Commando
 	      case 66:	// Revenant
 	      case 84:	// Wolf SS
-		spawn = false;
+		spawn = False;
 		break;
 	    }
 	}
-	if (spawn == false)
+	if (spawn == False)
 	    break;
 
 	// Do spawn all other stuff. 

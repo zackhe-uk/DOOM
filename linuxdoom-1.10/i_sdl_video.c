@@ -153,7 +153,7 @@ void I_StartFrame (void)
 
 static int	lastmousex = 0;
 static int	lastmousey = 0;
-boolean		mousemoved = false;
+boolean		mousemoved = False;
 
 void I_GetEvent(void)
 {
@@ -221,10 +221,10 @@ void I_GetEvent(void)
 				{
 				D_PostEvent(&event);
 				// fprintf(stderr, "m");
-				mousemoved = false;
+				mousemoved = False;
 				} else
 				{
-				mousemoved = true;
+				mousemoved = True;
 				}
 			}
 			break;
@@ -234,7 +234,7 @@ void I_GetEvent(void)
 			break;*/
 		
 		default:
-			//if (doShm && X_event.type == X_shmeventtype) shmFinished = true;
+			//if (doShm && X_event.type == X_shmeventtype) shmFinished = True;
 			break;
     }
 }
@@ -383,7 +383,7 @@ void I_InitGraphics(void)
 
     // grabs the pointer so it is restricted to this window
     if (grabMouse)
-		SDL_SetWindowMouseGrab(S_window, true); // nonfatal, no msg
+		SDL_SetWindowMouseGrab(S_window, True); // nonfatal, no msg
 
 
 	image = SDL_CreateTexture(S_renderer, SDL_PIXELFORMAT_INDEX8, SDL_TEXTUREACCESS_STREAMING, S_width, S_height);

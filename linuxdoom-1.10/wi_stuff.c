@@ -417,7 +417,7 @@ void WI_slamBackground(void)
 //  because of timing issues in netgames.
 boolean WI_Responder(event_t* ev)
 {
-    return false;
+    return False;
 }
 
 
@@ -467,7 +467,7 @@ WI_drawOnLnode
     int		top;
     int		right;
     int		bottom;
-    boolean	fits = false;
+    boolean	fits = False;
 
     i = 0;
     do
@@ -482,7 +482,7 @@ WI_drawOnLnode
 	    && top >= 0
 	    && bottom < SCREENHEIGHT)
 	{
-	    fits = true;
+	    fits = True;
 	}
 	else
 	{
@@ -750,7 +750,7 @@ void WI_updateNoState(void) {
 
 }
 
-static boolean		snl_pointeron = false;
+static boolean		snl_pointeron = False;
 
 
 void WI_initShowNextLoc(void)
@@ -815,7 +815,7 @@ void WI_drawShowNextLoc(void)
 
 void WI_drawNoState(void)
 {
-    snl_pointeron = true;
+    snl_pointeron = True;
     WI_drawShowNextLoc();
 }
 
@@ -916,7 +916,7 @@ void WI_updateDeathmatchStats(void)
 	if (!(bcnt&3))
 	    S_StartSound(0, sfx_pistol);
 	
-	stillticking = false;
+	stillticking = False;
 
 	for (i=0 ; i<MAXPLAYERS ; i++)
 	{
@@ -938,7 +938,7 @@ void WI_updateDeathmatchStats(void)
 			if (dm_frags[i][j] < -99)
 			    dm_frags[i][j] = -99;
 			
-			stillticking = true;
+			stillticking = True;
 		    }
 		}
 		dm_totals[i] = WI_fragSum(i);
@@ -1142,7 +1142,7 @@ void WI_updateNetgameStats(void)
 	if (!(bcnt&3))
 	    S_StartSound(0, sfx_pistol);
 
-	stillticking = false;
+	stillticking = False;
 
 	for (i=0 ; i<MAXPLAYERS ; i++)
 	{
@@ -1154,7 +1154,7 @@ void WI_updateNetgameStats(void)
 	    if (cnt_kills[i] >= (plrs[i].skills * 100) / wbs->maxkills)
 		cnt_kills[i] = (plrs[i].skills * 100) / wbs->maxkills;
 	    else
-		stillticking = true;
+		stillticking = True;
 	}
 	
 	if (!stillticking)
@@ -1168,7 +1168,7 @@ void WI_updateNetgameStats(void)
 	if (!(bcnt&3))
 	    S_StartSound(0, sfx_pistol);
 
-	stillticking = false;
+	stillticking = False;
 
 	for (i=0 ; i<MAXPLAYERS ; i++)
 	{
@@ -1179,7 +1179,7 @@ void WI_updateNetgameStats(void)
 	    if (cnt_items[i] >= (plrs[i].sitems * 100) / wbs->maxitems)
 		cnt_items[i] = (plrs[i].sitems * 100) / wbs->maxitems;
 	    else
-		stillticking = true;
+		stillticking = True;
 	}
 	if (!stillticking)
 	{
@@ -1192,7 +1192,7 @@ void WI_updateNetgameStats(void)
 	if (!(bcnt&3))
 	    S_StartSound(0, sfx_pistol);
 
-	stillticking = false;
+	stillticking = False;
 
 	for (i=0 ; i<MAXPLAYERS ; i++)
 	{
@@ -1204,7 +1204,7 @@ void WI_updateNetgameStats(void)
 	    if (cnt_secret[i] >= (plrs[i].ssecret * 100) / wbs->maxsecret)
 		cnt_secret[i] = (plrs[i].ssecret * 100) / wbs->maxsecret;
 	    else
-		stillticking = true;
+		stillticking = True;
 	}
 	
 	if (!stillticking)
@@ -1218,7 +1218,7 @@ void WI_updateNetgameStats(void)
 	if (!(bcnt&3))
 	    S_StartSound(0, sfx_pistol);
 
-	stillticking = false;
+	stillticking = False;
 
 	for (i=0 ; i<MAXPLAYERS ; i++)
 	{
@@ -1230,7 +1230,7 @@ void WI_updateNetgameStats(void)
 	    if (cnt_frags[i] >= (fsum = WI_fragSum(i)))
 		cnt_frags[i] = fsum;
 	    else
-		stillticking = true;
+		stillticking = True;
 	}
 	
 	if (!stillticking)
@@ -1485,18 +1485,18 @@ void WI_checkForAccelerate(void)
 	    {
 		if (!player->attackdown)
 		    acceleratestage = 1;
-		player->attackdown = true;
+		player->attackdown = True;
 	    }
 	    else
-		player->attackdown = false;
+		player->attackdown = False;
 	    if (player->cmd.buttons & BT_USE)
 	    {
 		if (!player->usedown)
 		    acceleratestage = 1;
-		player->usedown = true;
+		player->usedown = True;
 	    }
 	    else
-		player->usedown = false;
+		player->usedown = False;
 	}
     }
 }
@@ -1513,9 +1513,9 @@ void WI_Ticker(void)
     {
 	// intermission music
   	if ( gamemode == commercial )
-	  S_ChangeMusic(mus_dm2int, true);
+	  S_ChangeMusic(mus_dm2int, True);
 	else
-	  S_ChangeMusic(mus_inter, true); 
+	  S_ChangeMusic(mus_inter, True); 
     }
 
     WI_checkForAccelerate();

@@ -69,10 +69,12 @@ void**			lumpcache;
 
 #define strcmpi	strcasecmp
 
+#ifndef EMSCRIPTEN
 void strupr (char* s)
 {
     while (*s) { *s = toupper(*s); s++; }
 }
+#endif
 
 int filelength (int handle) 
 { 
@@ -194,7 +196,7 @@ void W_AddFile (char *filename)
 			 "or PWAD id\n", filename);
 	    }
 	    
-	    // ???modifiedgame = true;		
+	    // ???modifiedgame = True;		
 	}
 	header.numlumps = LONG(header.numlumps);
 	header.infotableofs = LONG(header.infotableofs);

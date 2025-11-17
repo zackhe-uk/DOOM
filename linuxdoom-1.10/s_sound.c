@@ -241,7 +241,7 @@ void S_Start(void)
   //  if (commercial && mnum > mus_e3m9)	
   //      mnum -= mus_e3m9;
   
-  S_ChangeMusic(mnum, true);
+  S_ChangeMusic(mnum, True);
   
   nextcleanup = 15;
 }	
@@ -498,7 +498,7 @@ void S_PauseSound(void)
     if (mus_playing && !mus_paused)
     {
 	I_PauseSong(mus_playing->handle);
-	mus_paused = true;
+	mus_paused = True;
     }
 }
 
@@ -507,7 +507,7 @@ void S_ResumeSound(void)
     if (mus_playing && mus_paused)
     {
 	I_ResumeSong(mus_playing->handle);
-	mus_paused = false;
+	mus_paused = False;
     }
 }
 
@@ -642,7 +642,7 @@ void S_SetSfxVolume(int volume)
 //
 void S_StartMusic(int m_id)
 {
-    S_ChangeMusic(m_id, false);
+    S_ChangeMusic(m_id, False);
 }
 
 void

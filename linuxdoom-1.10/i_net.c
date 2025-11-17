@@ -72,9 +72,11 @@ boolean NetListen (void);
 //
 // NETWORKING
 //
-
+#ifndef EMSCRIPTEN
 int	DOOMPORT =	(IPPORT_USERRESERVED +0x1d );
-
+#else
+int     DOOMPORT = 0;
+#endif
 int			sendsocket;
 int			insocket;
 
@@ -243,7 +245,7 @@ int GetLocalAddress (void)
 //
 void I_InitNetwork (void)
 {
-    boolean		trueval = true;
+    boolean		Trueval = True;
     int			i;
     int			p;
     struct hostent*	hostentry;	// host information entry
@@ -282,17 +284,17 @@ void I_InitNetwork (void)
     if (!i)
     {
 	// single player game
-	netgame = false;
+	netgame = False;
 	doomcom->id = DOOMCOM_ID;
 	doomcom->numplayers = doomcom->numnodes = 1;
-	doomcom->deathmatch = false;
+	doomcom->deathmatch = False;
 	doomcom->consoleplayer = 0;
 	return;
     }
 
     netsend = PacketSend;
     netget = PacketGet;
-    netgame = true;
+    netgame = True;
 
     // parse player number and host list
     doomcom->consoleplayer = myargv[i+1][0]-'1';
@@ -326,7 +328,7 @@ void I_InitNetwork (void)
     // build message to receive
     insocket = UDPsocket ();
     BindToLocalPort (insocket,htons(DOOMPORT));
-    ioctl (insocket, FIONBIO, &trueval);
+    ioctl (insocket, FIONBIO, &Trueval);
 
     sendsocket = UDPsocket ();
 }

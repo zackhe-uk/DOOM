@@ -208,12 +208,13 @@ void openwad(char* wadname)
     {
         if(snd_verbose > 1) fprintf(stderr, "%d of %d ", i, numlumps);
         strncpy(lumpinfo[i].name, filetable[i].name, 8);
-        lumpinfo[i].handle = wadfile;
+        lumpinfo[i].handle  = wadfile;
         lumpinfo[i].filepos = LONG(filetable[i].filepos);
-        lumpinfo[i].size = LONG(filetable[i].size);
+        lumpinfo[i].size    = LONG(filetable[i].size);
         if(snd_verbose > 1) fprintf(stderr, "lump [%.8s] exists\n", lumpinfo[i].name);
     }
 
+    free(filetable);
 }
 
 void*
@@ -221,28 +222,26 @@ loadlump
 ( char*		lumpname,
   int*		size )
 {
-
     int		i;
     void*	lump;
 
-    for (i=0 ; i<numlumps ; i++)
+    for (i = 0; i < numlumps; i++)
     {
-	if (!strncasecmp(lumpinfo[i].name, lumpname, 8))
-	    break;
+	    if (!strncasecmp(lumpinfo[i].name, lumpname, 8)) break;
     }
 
     if (i == numlumps)
     {
-	// fprintf(stderr,
-	//   "Could not find lumpname [%s]\n", lumpname);
-	lump = 0;
+        // fprintf(stderr,
+        //   "Could not find lumpname [%s]\n", lumpname);
+        lump = 0;
     }
     else
     {
-	lump = (void *) malloc(lumpinfo[i].size);
-	lseek(lumpinfo[i].handle, lumpinfo[i].filepos, SEEK_SET);
-	read(lumpinfo[i].handle, lump, lumpinfo[i].size);
-	*size = lumpinfo[i].size;
+        lump = (void *) malloc(lumpinfo[i].size);
+        lseek(lumpinfo[i].handle, lumpinfo[i].filepos, SEEK_SET);
+        read(lumpinfo[i].handle, lump, lumpinfo[i].size);
+        *size = lumpinfo[i].size;
     }
 
     return lump;
@@ -268,8 +267,8 @@ getsfx
     sfx = (unsigned char *) loadlump(name, &size);
 
     // pad the sound effect out to the mixing buffer size
-    paddedsize = ((size-8 + (SAMPLECOUNT-1)) / SAMPLECOUNT) * SAMPLECOUNT;
-    paddedsfx = (unsigned char *) realloc(sfx, paddedsize+8);
+    paddedsize = ((size - 8 + (SAMPLECOUNT - 1)) / SAMPLECOUNT) * SAMPLECOUNT;
+    paddedsfx = (unsigned char *) realloc(sfx, paddedsize + 8);
     for (int i = size; i < paddedsize + 8; i++) paddedsfx[i] = 128;
 
     *len = paddedsize;

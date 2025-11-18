@@ -250,19 +250,19 @@ grabdata
     if (!doomwaddir)
 	doomwaddir = ".";
 
-    doom1wad = malloc(strlen(doomwaddir)+1+9+1);
+    doom1wad  = malloc(strlen(doomwaddir)+1+9+1);
     sprintf(doom1wad, "%s/doom1.wad", doomwaddir);
 
-    doom2wad = malloc(strlen(doomwaddir)+1+9+1);
+    doom2wad  = malloc(strlen(doomwaddir)+1+9+1);
     sprintf(doom2wad, "%s/doom2.wad", doomwaddir);
 
     doom2fwad = malloc(strlen(doomwaddir)+1+10+1);
     sprintf(doom2fwad, "%s/doom2f.wad", doomwaddir);
     
-    doomuwad = malloc(strlen(doomwaddir)+1+8+1);
+    doomuwad  = malloc(strlen(doomwaddir)+1+8+1);
     sprintf(doomuwad, "%s/doomu.wad", doomwaddir);
     
-    doomwad = malloc(strlen(doomwaddir)+1+8+1);
+    doomwad   = malloc(strlen(doomwaddir)+1+8+1);
     sprintf(doomwad, "%s/doom.wad", doomwaddir);
 
     //	home = getenv("HOME");
@@ -320,7 +320,7 @@ grabdata
 			if (longsound < lengths[i]) longsound = lengths[i];
 		} else {
 			S_sfx[i].data = S_sfx[i].link->data;
-			lengths[i] = lengths[(S_sfx[i].link - S_sfx)/sizeof(sfxinfo_t)];
+			lengths[i] = lengths[(S_sfx[i].link - S_sfx) / sizeof(sfxinfo_t)];
 		}
 		if(snd_verbose > 1)
 			 fprintf(stderr, "loaded SFX %d of %d\n", i, NUMSFX);
@@ -336,9 +336,15 @@ grabdata
 		//  }
     }
 
+	// cleanup
+	free(doom1wad);
+	free(doomwad);
+	free(doomuwad);
+	free(doom2wad);
+	free(doom2fwad);
 }
 
-static struct timeval		last={0,0};
+static struct timeval		last = {0,0};
 //static struct timeval		now;
 
 static struct timezone		whocares;
@@ -492,6 +498,13 @@ void quit(void)
 {
     I_ShutdownMusic();
     I_ShutdownSound();
+	for (int i = 1; i < NUMSFX; i++)
+    {
+		if(S_sfx[i].data != NULL && !S_sfx[i].link)
+			free(S_sfx[i].data - 8);
+		S_sfx[i].data = NULL;
+		// avoids double free 
+    }
     exit(0);
 }
 

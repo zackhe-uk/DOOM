@@ -482,8 +482,8 @@ I_StartSound
 #ifdef SNDSERV 
     if (sndserver)
     {
-	fprintf(sndserver, "p%2.2x%2.2x%2.2x%2.2x\n", id, pitch, vol, sep);
-	fflush(sndserver);
+      fprintf(sndserver, "p%2.2x%2.2x%2.2x%2.2x\n", id, pitch, vol, sep);
+      fflush(sndserver);
     }
     // warning: control reaches end of non-void function.
     return id;
@@ -741,11 +741,11 @@ I_InitSound(void)
   char buffer[256];
   
   if (getenv("DOOMWADDIR"))
-    sprintf(buffer, "%s/%s",
+    snprintf(buffer, 256, "%s/%s",
 	    getenv("DOOMWADDIR"),
 	    sndserver_filename);
   else
-    sprintf(buffer, "%s", sndserver_filename);
+    snprintf(buffer, 256, "%s", sndserver_filename);
   
   // start sound process
   if ( !access(buffer, X_OK) )

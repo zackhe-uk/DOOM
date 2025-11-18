@@ -201,7 +201,7 @@ void I_ProcessEvent(SDL_Event *sdl_event)
 			break;
 		
 		default:
-			//if (doShm && X_event.type == X_shmeventtype) shmFinished = True;
+			//if (doShm && X_event.type == X_shmeventtype) shmFinished = true;
 			break;
     }
 }
@@ -320,7 +320,7 @@ void I_InitGraphics(void)
     S_height = SCREENHEIGHT;
 
     // check if the user wants to grab the mouse (quite unnice)
-    grabMouse = True; // !!M_CheckParm("-grabmouse");
+    grabMouse = true; // !!M_CheckParm("-grabmouse");
 
     // create the palette
     S_pal = SDL_CreatePalette(256);
@@ -357,7 +357,7 @@ void I_InitGraphics(void)
 
     // grabs the pointer so it is restricted to this window
     if (grabMouse)
-		SDL_SetWindowMouseGrab(S_window, True); // nonfatal, no msg
+		SDL_SetWindowMouseGrab(S_window, true); // nonfatal, no msg
 
 
 	image = SDL_CreateTexture(S_renderer, SDL_PIXELFORMAT_INDEX8, SDL_TEXTUREACCESS_STREAMING, S_width, S_height);

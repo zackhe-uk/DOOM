@@ -45,7 +45,7 @@ void P_SpawnMapThing (mapthing_t*	mthing);
 
 //
 // P_SetMobjState
-// Returns True if the mobj is still present.
+// Returns true if the mobj is still present.
 //
 int test;
 
@@ -62,7 +62,7 @@ P_SetMobjState
 	{
 	    mobj->state = (state_t *) S_NULL;
 	    P_RemoveMobj (mobj);
-	    return False;
+	    return false;
 	}
 
 	st = &states[state];
@@ -79,7 +79,7 @@ P_SetMobjState
 	state = st->nextstate;
     } while (!mobj->tics);
 				
-    return True;
+    return true;
 }
 
 
@@ -687,7 +687,7 @@ void P_SpawnPlayer (mapthing_t* mthing)
     // give all cards in death match mode
     if (deathmatch)
 	for (i=0 ; i<NUMCARDS ; i++)
-	    p->cards[i] = True;
+	    p->cards[i] = true;
 			
     if (mthing->type-1 == consoleplayer)
     {

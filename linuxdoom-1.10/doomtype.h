@@ -27,7 +27,8 @@
 
 #ifndef __BYTEBOOL__
 #define __BYTEBOOL__
-typedef enum {False, True} boolean;
+#include <stdbool.h>
+typedef int boolean;
 typedef unsigned char byte;
 #endif
 

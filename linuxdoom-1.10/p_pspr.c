@@ -154,7 +154,7 @@ void P_BringUpWeapon (player_t* player)
 
 //
 // P_CheckAmmo
-// Returns True if there is enough ammo to shoot.
+// Returns true if there is enough ammo to shoot.
 // If not, selects the next weapon to use.
 //
 boolean P_CheckAmmo (player_t* player)
@@ -175,7 +175,7 @@ boolean P_CheckAmmo (player_t* player)
     // Some do not need ammunition anyway.
     // Return if current ammunition sufficient.
     if (ammo == am_noammo || player->ammo[ammo] >= count)
-	return True;
+	return true;
 		
     // Out of ammo, pick a weapon to change to.
     // Preferences are set here.
@@ -235,7 +235,7 @@ boolean P_CheckAmmo (player_t* player)
 		  ps_weapon,
 		  weaponinfo[player->readyweapon].downstate);
 
-    return False;	
+    return false;	
 }
 
 
@@ -317,13 +317,13 @@ A_WeaponReady
 	     || (player->readyweapon != wp_missile
 		 && player->readyweapon != wp_bfg) )
 	{
-	    player->attackdown = True;
+	    player->attackdown = true;
 	    P_FireWeapon (player);		
 	    return;
 	}
     }
     else
-	player->attackdown = False;
+	player->attackdown = false;
     
     // bob the weapon based on movement speed
     angle = (128*leveltime)&FINEMASK;
@@ -683,7 +683,7 @@ A_FireShotgun
     P_BulletSlope (player->mo);
 	
     for (i=0 ; i<7 ; i++)
-	P_GunShot (player->mo, False);
+	P_GunShot (player->mo, false);
 }
 
 

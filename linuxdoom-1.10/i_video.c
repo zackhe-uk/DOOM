@@ -188,7 +188,7 @@ void I_StartFrame (void)
 
 static int	lastmousex = 0;
 static int	lastmousey = 0;
-boolean		mousemoved = False;
+boolean		mousemoved = false;
 boolean		shmFinished;
 
 void I_GetEvent(void)
@@ -259,10 +259,10 @@ void I_GetEvent(void)
 	    {
 		D_PostEvent(&event);
 		// fprintf(stderr, "m");
-		mousemoved = False;
+		mousemoved = false;
 	    } else
 	    {
-		mousemoved = True;
+		mousemoved = true;
 	    }
 	}
 	break;
@@ -272,7 +272,7 @@ void I_GetEvent(void)
 	break;
 	
       default:
-	if (doShm && X_event.type == X_shmeventtype) shmFinished = True;
+	if (doShm && X_event.type == X_shmeventtype) shmFinished = true;
 	break;
     }
 
@@ -333,7 +333,7 @@ void I_StartTic (void)
 	}
     }
 
-    mousemoved = False;
+    mousemoved = false;
 
 }
 
@@ -490,11 +490,11 @@ void I_FinishUpdate (void)
 				0, 0,
 				0, 0,
 				X_width, X_height,
-				True ))
+				true ))
 	    I_Error("XShmPutImage() failed\n");
 
 	// wait for it to finish and processes all input events
-	shmFinished = False;
+	shmFinished = false;
 	do
 	{
 	    I_GetEvent();
@@ -514,7 +514,7 @@ void I_FinishUpdate (void)
 			X_width, X_height );
 
 	// sync up with server
-	XSync(X_display, False);
+	XSync(X_display, false);
 
     }
 
@@ -540,7 +540,7 @@ void UploadNewPalette(Colormap cmap, byte *palette)
 
     register int	i;
     register int	c;
-    static boolean	firstcall = True;
+    static boolean	firstcall = true;
 
 #ifdef __cplusplus
     if (X_visualinfo.c_class == PseudoColor && X_visualinfo.depth == 8)
@@ -551,7 +551,7 @@ void UploadNewPalette(Colormap cmap, byte *palette)
 	    // initialize the colormap
 	    if (firstcall)
 	    {
-		firstcall = False;
+		firstcall = false;
 		for (i=0 ; i<256 ; i++)
 		{
 		    colors[i].pixel = i;
@@ -784,7 +784,7 @@ void I_InitGraphics(void)
 	    d = displayname;
 	    while (*d && (*d != ':')) d++;
 	    if (*d) *d = 0;
-	    if (!(!strcasecmp(displayname, "unix") || !*displayname)) doShm = False;
+	    if (!(!strcasecmp(displayname, "unix") || !*displayname)) doShm = false;
 	}
     }
 
@@ -822,7 +822,7 @@ void I_InitGraphics(void)
 
     // create the GC
     valuemask = GCGraphicsExposures;
-    xgcvalues.graphics_exposures = False;
+    xgcvalues.graphics_exposures = false;
     X_gc = XCreateGC(	X_display,
   			X_mainWindow,
   			valuemask,
@@ -845,7 +845,7 @@ void I_InitGraphics(void)
 
     // grabs the pointer so it is restricted to this window
     if (grabMouse)
-	XGrabPointer(X_display, X_mainWindow, True,
+	XGrabPointer(X_display, X_mainWindow, true,
 		     ButtonPressMask|ButtonReleaseMask|PointerMotionMask,
 		     GrabModeAsync, GrabModeAsync,
 		     X_mainWindow, None, CurrentTime);

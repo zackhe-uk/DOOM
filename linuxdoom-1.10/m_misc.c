@@ -120,15 +120,15 @@ M_WriteFile
     handle = open ( name, O_WRONLY | O_CREAT | O_TRUNC | O_BINARY, 0666);
 
     if (handle == -1)
-	return False;
+	return false;
 
     count = write (handle, source, length);
     close (handle);
 	
     if (count < length)
-	return False;
+	return false;
 		
-    return True;
+    return true;
 }
 
 
@@ -366,13 +366,13 @@ void M_LoadDefaults (void)
     {
 	while (!feof(f))
 	{
-	    isstring = False;
+	    isstring = false;
 	    if (fscanf (f, "%79s %[^\n]\n", def, strparm) == 2)
 	    {
 		if (strparm[0] == '"')
 		{
 		    // get a string default
-		    isstring = True;
+		    isstring = true;
 		    len = strlen(strparm);
 		    newstring = (char *) malloc(len);
 		    strparm[len-1] = 0;

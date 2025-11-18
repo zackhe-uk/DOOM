@@ -26,8 +26,11 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <sys/ipc.h>
-#include <sys/shm.h>
 
+#ifdef EMSCRIPTEN
+#include <emscripten.h>
+#include <emscripten/html5.h>
+#endif
 
 #include <stdarg.h>
 #include <sys/time.h>
@@ -150,90 +153,52 @@ void I_StartFrame (void)
     // er?
 }
 
-static int	lastmousex = 0;
-static int	lastmousey = 0;
-boolean		mousemoved = False;
 
 void I_ProcessEvent(SDL_Event *sdl_event)
 {
-    event_t event;
+    event_t 	 event;
+	unsigned int mbflags;
+
+	if ((sdl_event->type == SDL_EVENT_MOUSE_BUTTON_DOWN) ||
+		(sdl_event->type == SDL_EVENT_MOUSE_BUTTON_UP  ) ||
+		(sdl_event->type == SDL_EVENT_MOUSE_MOTION     )
+	)
+	{
+		mbflags = SDL_GetMouseState(NULL, NULL);
+	}
 
     switch (sdl_event->type)
     {
 		case SDL_EVENT_KEY_DOWN:
-			event.type = ev_keydown;
-			event.data1 = xlatekey(sdl_event);
-			D_PostEvent(&event);
-			// fprintf(stderr, "k");
-			break;
 		case SDL_EVENT_KEY_UP:
-			event.type = ev_keyup;
+			event.type = (sdl_event->type == SDL_EVENT_KEY_DOWN) ? ev_keydown : ev_keyup;
 			event.data1 = xlatekey(sdl_event);
 			D_PostEvent(&event);
-			// fprintf(stderr, "ku");
 			break;
+			
+		case SDL_EVENT_MOUSE_BUTTON_DOWN:
+		case   SDL_EVENT_MOUSE_BUTTON_UP:
+#ifdef EMSCRIPTEN
+			emscripten_request_pointerlock("canvas", true);
+#endif
+		case      SDL_EVENT_MOUSE_MOTION:
+			event.type = ev_mouse;
+			event.data1 =
+				  (mbflags     	             & SDL_BUTTON_LMASK        )
+				| (mbflags                   & SDL_BUTTON_RMASK ? 2 : 0)
+				| (mbflags   		         & SDL_BUTTON_MMASK ? 4 : 0);
+			event.data2 = event.data3 = 0;
+			if(sdl_event->type == SDL_EVENT_MOUSE_MOTION && grabMouse)
+			{
+				event.data2 =  (int)roundf(sdl_event->motion.xrel) << 2;
+				event.data3 = -(int)roundf(sdl_event->motion.yrel) << 2; // Am I a newgen for inverting the Y? lmfao
+			}
+			D_PostEvent(&event);
+			break;
+
 		case SDL_EVENT_QUIT:
 			I_Quit(); //byebye
 			break;
-			/*
-		case ButtonPress:
-			event.type = ev_mouse;
-			event.data1 =
-				(X_event.xbutton.state & Button1Mask)
-				| (X_event.xbutton.state & Button2Mask ? 2 : 0)
-				| (X_event.xbutton.state & Button3Mask ? 4 : 0)
-				| (X_event.xbutton.button == Button1)
-				| (X_event.xbutton.button == Button2 ? 2 : 0)
-				| (X_event.xbutton.button == Button3 ? 4 : 0);
-			event.data2 = event.data3 = 0;
-			D_PostEvent(&event);
-			// fprintf(stderr, "b");
-			break;
-		case ButtonRelease:
-			event.type = ev_mouse;
-			event.data1 =
-				(X_event.xbutton.state & Button1Mask)
-				| (X_event.xbutton.state & Button2Mask ? 2 : 0)
-				| (X_event.xbutton.state & Button3Mask ? 4 : 0);
-			// suggest parentheses around arithmetic in operand of |
-			event.data1 =
-				event.data1
-				^ (X_event.xbutton.button == Button1 ? 1 : 0)
-				^ (X_event.xbutton.button == Button2 ? 2 : 0)
-				^ (X_event.xbutton.button == Button3 ? 4 : 0);
-			event.data2 = event.data3 = 0;
-			D_PostEvent(&event);
-			// fprintf(stderr, "bu");
-			break;
-		case MotionNotify:
-			event.type = ev_mouse;
-			event.data1 =
-				(X_event.xmotion.state & Button1Mask)
-				| (X_event.xmotion.state & Button2Mask ? 2 : 0)
-				| (X_event.xmotion.state & Button3Mask ? 4 : 0);
-			event.data2 = (X_event.xmotion.x - lastmousex) << 2;
-			event.data3 = (lastmousey - X_event.xmotion.y) << 2;
-
-			if (event.data2 || event.data3)
-			{
-				lastmousex = X_event.xmotion.x;
-				lastmousey = X_event.xmotion.y;
-				if (X_event.xmotion.x != X_width/2 &&
-				X_event.xmotion.y != X_height/2)
-				{
-				D_PostEvent(&event);
-				// fprintf(stderr, "m");
-				mousemoved = False;
-				} else
-				{
-				mousemoved = True;
-				}
-			}
-			break;
-		
-		case Expose:
-		case ConfigureNotify:
-			break;*/
 		
 		default:
 			//if (doShm && X_event.type == X_shmeventtype) shmFinished = True;
@@ -267,10 +232,7 @@ void I_UpdateNoBlit (void)
 //
 void I_FinishUpdate (void)
 {
-
     static int	lasttic;
-
-    // UNUSED static unsigned char *bigscreen=0;
 
     // draws little dots on the bottom of the screen
     if (devparm)
@@ -358,7 +320,7 @@ void I_InitGraphics(void)
     S_height = SCREENHEIGHT;
 
     // check if the user wants to grab the mouse (quite unnice)
-    grabMouse = !!M_CheckParm("-grabmouse");
+    grabMouse = True; // !!M_CheckParm("-grabmouse");
 
     // create the palette
     S_pal = SDL_CreatePalette(256);

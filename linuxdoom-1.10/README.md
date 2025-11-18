@@ -6,6 +6,9 @@ gcc *.c -Wall -Wextra -Wpedantic -Wno-unused -Wno-format-truncation -Wno-implici
 
 or targetting Emscripten
 ```
-emcc *.c [-m32, optional 32-bit] -g -DNORMALUNIX -DLINUX -DUSE_SDL --embed-file path/to/doom1.wad@doom1.wad -L/path/to/SDL/lib -I/path/to/SDL/include -lSDL3 -lm -o doom.html
+emcc *.c -m32 -g -DNORMALUNIX -DLINUX -DUSE_SDL --embed-file ../../doom-wad-shareware-1.9.fixed/doom1.wad@doom1.wad -L../../SDL32/build -I../../SDL/include -lSDL3 -lm -o doom32.html
 ```
-
+64 bit
+```
+emcc *.c -m64 -sMEMORY64 -Wl,-mwasm64 -g -DNORMALUNIX -DLINUX -DUSE_SDL --embed-file ../../doom-wad-shareware-1.9.fixed/doom1.wad@doom1.wad -L../../SDL/build -I../../SDL/include -lSDL3 -lm -o doom.html
+```
